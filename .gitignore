@@ -14,3 +14,8 @@ backend/**/*.class
 **/.env
 !**/.env.example
 .DS_Store
+
+# Generated TypeScript files
+*.tsbuildinfo
+frontend/vite.config.js
+frontend/vite.config.d.ts
