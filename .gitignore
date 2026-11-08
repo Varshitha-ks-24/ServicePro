@@ -1,0 +1,16 @@
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.env
+
+# Java
+backend/target/
+backend/.env
+backend/**/*.class
+
+# General
+.env
+**/.env
+!**/.env.example
+.DS_Store

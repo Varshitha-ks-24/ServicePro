@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: ${MYSQL_URL:jdbc:h2:mem:servicepro;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    username: ${MYSQL_USERNAME:sa}
+    password: ${MYSQL_PASSWORD:}
+    driver-class-name: ${MYSQL_DRIVER_CLASS_NAME:org.h2.Driver}
+  jpa:
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+management:
+  endpoint:
+    health:
+      show-details: always
