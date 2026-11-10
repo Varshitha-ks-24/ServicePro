@@ -499,17 +499,39 @@ public class FsmController {
         return cycleView(cycle);
     }
 
-    private <T> PageResult<Map<String, Object>> result(TypedQuery<T> query, String countJpql, int page, int size,
-        java.util.function.Function<T, Map<String, Object>> mapper, Object... params) {
-        int safePage = Math.max(page, 0); int safeSize = Math.clamp(size, 1, 100);
-        query.setFirstResult(safePage * safeSize).setMaxResults(safeSize);
-        TypedQuery<Long> countQuery = entityManager.createQuery(countJpql, Long.class);
-        countQuery.setParameter("search", params[0]).setParameter("pattern", "%" + params[0] + "%");
-        if (params.length > 1 && params[1] instanceof Long customerId) countQuery.setParameter("customerId", customerId);
-        if (params.length > 1 && params[1] instanceof String status) countQuery.setParameter("status", status);
-        if (params.length > 2 && params[2] instanceof String technicianEmail) countQuery.setParameter("technicianEmail", technicianEmail);
-        return new PageResult<>(query.getResultList().stream().map(mapper).toList(), safePage, safeSize, countQuery.getSingleResult());
+   private <T> PageResult<Map<String, Object>> result(TypedQuery<T> query, String countJpql, int page, int size,
+    java.util.function.Function<T, Map<String, Object>> mapper, Object... params) {
+
+    int safePage = Math.max(page, 0);
+    int safeSize = Math.clamp(size, 1, 100);
+
+    query.setFirstResult(safePage * safeSize).setMaxResults(safeSize);
+
+    TypedQuery<Long> countQuery = entityManager.createQuery(countJpql, Long.class);
+
+    countQuery.setParameter("search", params[0]);
+    countQuery.setParameter("pattern", "%" + params[0] + "%");
+
+    if (countJpql.contains(":customerId")) {
+        countQuery.setParameter("customerId", params[1]);
     }
+    if (countJpql.contains(":branchId")) {
+        countQuery.setParameter("branchId", params[1]);
+    }
+    if (countJpql.contains(":status")) {
+        countQuery.setParameter("status", params[1]);
+    }
+    if (countJpql.contains(":technicianEmail")) {
+        countQuery.setParameter("technicianEmail", params[2]);
+    }
+
+    return new PageResult<>(
+        query.getResultList().stream().map(mapper).toList(),
+        safePage,
+        safeSize,
+        countQuery.getSingleResult()
+    );
+}
 
     private <T> List<T> page(String jpql, Class<T> type, int page, int size, Object... parameters) {
         TypedQuery<T> query = entityManager.createQuery(jpql, type).setFirstResult(page * size).setMaxResults(size);

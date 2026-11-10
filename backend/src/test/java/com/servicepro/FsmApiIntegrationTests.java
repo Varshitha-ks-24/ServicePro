@@ -112,6 +112,14 @@ class FsmApiIntegrationTests {
             .andExpect(jsonPath("$.customerName", is("Integration Bank")))
             .andExpect(jsonPath("$.code", is("BR-001")));
 
+        mockMvc.perform(get("/api/v1/branches")
+                .header("Authorization", authorization)
+                .param("search", "Central Branch"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.total", is(1)))
+            .andExpect(jsonPath("$.items[0].name", is("Central Branch")))
+            .andExpect(jsonPath("$.items[0].customerName", is("Integration Bank")));
+
         mockMvc.perform(get("/api/v1/customers")
                 .header("Authorization", authorization)
                 .param("search", "Integration Bank"))
